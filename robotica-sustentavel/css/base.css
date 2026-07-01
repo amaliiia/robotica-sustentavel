@@ -1,0 +1,202 @@
+/* =============================================================
+   base.css — Reset, variáveis de design e elementos globais
+   ============================================================= */
+
+/* ── Variáveis de cor e espaçamento ── */
+:root {
+  --rs-green:        #2D6A27;
+  --rs-green-dark:   #1E4A1A;
+  --rs-green-light:  #3d8a34;
+  --rs-amber:        #E8B84B;
+  --rs-amber-dark:   #b8901f;
+  --rs-amber-light:  #f5d07a;
+  --rs-white:        #ffffff;
+  --rs-sage:         #F0F7EE;
+  --rs-sage2:        #dbeedd;
+  --rs-text:         #1A1A1A;
+  --rs-muted:        #5a7558;
+  --rs-border:       #c5ddc2;
+  --rs-radius:       8px;
+  --rs-radius-card:  10px;
+}
+
+/* ── Reset básico ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--rs-sage);
+  color: var(--rs-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Tipografia utilitária ── */
+.text-muted   { color: var(--rs-muted); }
+.text-green   { color: var(--rs-green-dark); }
+.text-amber   { color: var(--rs-amber-dark); }
+.text-sm      { font-size: 12px; }
+.text-xs      { font-size: 11px; }
+.font-medium  { font-weight: 500; }
+
+/* ── Botões ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: var(--rs-radius);
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.btn-primary {
+  background: var(--rs-green);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--rs-green-light); }
+
+.btn-amber {
+  background: var(--rs-amber);
+  color: var(--rs-green-dark);
+}
+.btn-amber:hover { opacity: 0.85; }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--rs-border);
+  color: var(--rs-muted);
+}
+.btn-ghost:hover { background: var(--rs-sage2); }
+
+.btn-sm {
+  font-size: 12px;
+  padding: 6px 12px;
+}
+
+/* ── Badges / etiquetas ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.badge-amber    { background: #fff8e6; color: #8a6200; border: 1px solid #f0d070; }
+.badge-green    { background: #eaf3e8; color: #2D6A27; border: 1px solid #b5d9b0; }
+.badge-gray     { background: #f2f2f2; color: #666;    border: 1px solid #ddd; }
+.badge-unweighed {
+  background: #fff0d0;
+  color: #7a4f00;
+  border: 1px solid #f0c84a;
+}
+.badge-unweighed i { font-size: 11px; }
+
+/* ── Formulários ── */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group.full { grid-column: 1 / -1; }
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--rs-green-dark);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1px solid var(--rs-border);
+  border-radius: var(--rs-radius);
+  padding: 8px 11px;
+  font-size: 13px;
+  background: #fff;
+  color: var(--rs-text);
+  font-family: inherit;
+  transition: border 0.15s;
+  outline: none;
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--rs-green);
+}
+
+.form-group textarea {
+  resize: none;
+  height: 64px;
+}
+
+.form-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ── Área de upload ── */
+.upload-area {
+  border: 1.5px dashed var(--rs-border);
+  border-radius: var(--rs-radius);
+  padding: 14px;
+  text-align: center;
+  background: #fff;
+  cursor: pointer;
+  transition: border 0.15s;
+}
+.upload-area:hover      { border-color: var(--rs-green); }
+.upload-area i          { font-size: 22px; color: var(--rs-muted); display: block; margin-bottom: 4px; }
+.upload-area .upload-hint { font-size: 12px; color: var(--rs-muted); }
+.upload-area .upload-opt  { font-size: 11px; color: #aaa; margin-top: 2px; }
+
+/* ── Abas (tabs) ── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1.5px solid var(--rs-border);
+  margin-bottom: 16px;
+}
+
+.tab {
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--rs-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s;
+}
+.tab.active {
+  color: var(--rs-green-dark);
+  border-bottom-color: var(--rs-green);
+  font-weight: 500;
+}
+
+.tab-content         { display: none; }
+.tab-content.active  { display: block; }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robótica Sustentável — Painel de Monitoramento</title>
+
+  <!-- Tabler Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+  <!-- Estilos globais e por módulo -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/views.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Barra lateral de navegação -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="brand">Robótica<br><span>Sustentável</span></div>
+        <div class="sub">Reciclagem Eletrônica</div>
+      </div>
+      <nav class="nav">
+        <div class="nav-section">Principal</div>
+        <button class="nav-item active" onclick="App.showView('coleta')" id="nav-coleta">
+          <i class="ti ti-clipboard-plus" aria-hidden="true"></i> Solicitar coleta
+        </button>
+        <div class="nav-section">Gestão</div>
+        <button class="nav-item" onclick="App.showView('painel')" id="nav-painel">
+          <i class="ti ti-layout-list" aria-hidden="true"></i> Painel de controle
+        </button>
+        <button class="nav-item" onclick="App.showView('rotas')" id="nav-rotas">
+          <i class="ti ti-route" aria-hidden="true"></i> Rotas de coleta
+        </button>
+        <button class="nav-item" onclick="App.showView('declaracao')" id="nav-declaracao">
+          <i class="ti ti-file-certificate" aria-hidden="true"></i> Declaração
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Área de conteúdo principal -->
+    <main class="main" id="main-content">
+
+      <!-- Cada view é carregada via JS ou pode ser incluída diretamente -->
+      <div id="view-coleta"     class="view active"></div>
+      <div id="view-painel"     class="view"></div>
+      <div id="view-rotas"      class="view"></div>
+      <div id="view-declaracao" class="view"></div>
+
+    </main>
+  </div>
+
+  <!-- Módulo de navegação principal -->
+  <script src="js/app.js"></script>
+
+  <!-- Módulos de cada view -->
+  <script src="js/views/coleta.js"></script>
+  <script src="js/views/painel.js"></script>
+  <script src="js/views/rotas.js"></script>
+  <script src="js/views/declaracao.js"></script>
+
+  <!-- Inicializa a aplicação -->
+  <script>
+    App.init();
+  </script>
+
+</body>
+</html>

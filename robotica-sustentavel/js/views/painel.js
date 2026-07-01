@@ -1,0 +1,215 @@
+/* =============================================================
+   views/painel.js — Painel de controle com abas de pedidos
+   ============================================================= */
+
+const PainelView = (() => {
+
+  /* ── Dados de exemplo ── */
+
+  const pedidosAgendados = [
+    {
+      icon: 'ti-building-store',
+      nome: 'InfoTech Soluções Ltda',
+      endereco: 'Av. Beira Mar, 3000 — Meireles, Fortaleza',
+      data: '28 jun, 09:00',
+      itens: 15,
+    },
+    {
+      icon: 'ti-user',
+      nome: 'Carlos Eduardo Martins',
+      endereco: 'Rua Nogueira Acioli, 120 — Aldeota, Fortaleza',
+      data: '29 jun, 14:30',
+      itens: 3,
+    },
+    {
+      icon: 'ti-building',
+      nome: 'Escola Est. Gov. Menezes Pimentel',
+      endereco: 'R. Padre Mororó, 38 — Centro, Fortaleza',
+      data: '30 jun, 10:00',
+      itens: 28,
+    },
+  ];
+
+  const pedidosColetados = [
+    {
+      icon: 'ti-building-store',
+      nome: 'Grupo Ambiental Norte S/A',
+      endereco: 'Av. Santos Dumont, 5335 — Aldeota',
+      dataColeta: '24/06/2026',
+      pesado: false,
+    },
+    {
+      icon: 'ti-user',
+      nome: 'Fernanda Queiroz',
+      endereco: 'R. Tibúrcio Cavalcante, 42 — Meireles',
+      dataColeta: '25/06/2026',
+      pesado: false,
+    },
+    {
+      icon: 'ti-building',
+      nome: 'Clínica Saúde Digital Ltda',
+      endereco: 'Av. Dom Luís, 880 — Aldeota',
+      dataColeta: '25/06/2026',
+      pesado: true,
+      peso: '47,2 kg',
+    },
+  ];
+
+  const pedidosConcluidos = [
+    {
+      icon: 'ti-circle-check',
+      nome: 'Universidade de Fortaleza — UNIFOR',
+      endereco: 'Av. Washington Soares, 1321 — Edson Queiroz',
+      dataConclusao: '20/06/2026',
+      peso: '182,5 kg',
+      itens: 64,
+    },
+    {
+      icon: 'ti-circle-check',
+      nome: 'Banco BNB — Agência Centro',
+      endereco: 'Praça Castro Carreira, s/n — Centro',
+      dataConclusao: '18/06/2026',
+      peso: '93,8 kg',
+      itens: 37,
+    },
+  ];
+
+  /* ── Funções de renderização de HTML ── */
+
+  function renderAgendados() {
+    return pedidosAgendados.map(p => `
+      <div class="order-card">
+        <div class="order-icon"><i class="ti ${p.icon}" aria-hidden="true"></i></div>
+        <div class="order-info">
+          <div class="name">${p.nome}</div>
+          <div class="addr">
+            <i class="ti ti-map-pin" aria-hidden="true"></i> ${p.endereco}
+          </div>
+          <div class="order-badges">
+            <span class="badge badge-amber">
+              <i class="ti ti-clock" aria-hidden="true"></i> ${p.data}
+            </span>
+            <span class="badge badge-gray">${p.itens} itens</span>
+          </div>
+        </div>
+        <div class="order-actions">
+          <button class="action-btn">Ver detalhes</button>
+          <button class="action-btn">Marcar coletado</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderColetados() {
+    return pedidosColetados.map(p => `
+      <div class="order-card">
+        <div class="order-icon"><i class="ti ${p.icon}" aria-hidden="true"></i></div>
+        <div class="order-info">
+          <div class="name">${p.nome}</div>
+          <div class="addr">
+            <i class="ti ti-map-pin" aria-hidden="true"></i> ${p.endereco}
+          </div>
+          <div class="meta">
+            Coletado em ${p.dataColeta}${p.pesado ? ` · ${p.peso}` : ''}
+          </div>
+          <div class="order-badges">
+            <span class="badge badge-green">
+              <i class="ti ti-check" aria-hidden="true"></i> Coletado
+            </span>
+            ${p.pesado
+              ? `<span class="badge badge-green">
+                   <i class="ti ti-scale" aria-hidden="true"></i> Pesado
+                 </span>`
+              : `<span class="badge badge-unweighed">
+                   <i class="ti ti-scale-off" aria-hidden="true"></i> Não pesado
+                 </span>`
+            }
+          </div>
+        </div>
+        <div class="order-actions">
+          ${!p.pesado
+            ? `<button class="action-btn">Registrar peso</button>`
+            : `<button class="action-btn">Concluir</button>`
+          }
+          <button class="action-btn">Ver detalhes</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderConcluidos() {
+    return pedidosConcluidos.map(p => `
+      <div class="order-card">
+        <div class="order-icon"><i class="ti ${p.icon}" aria-hidden="true"></i></div>
+        <div class="order-info">
+          <div class="name">${p.nome}</div>
+          <div class="addr">
+            <i class="ti ti-map-pin" aria-hidden="true"></i> ${p.endereco}
+          </div>
+          <div class="meta">
+            Concluído em ${p.dataConclusao} · ${p.peso} · ${p.itens} itens
+          </div>
+          <div class="order-badges">
+            <span class="badge badge-green">
+              <i class="ti ti-circle-check" aria-hidden="true"></i> Concluído
+            </span>
+          </div>
+        </div>
+        <div class="order-actions">
+          <button class="action-btn" onclick="App.showView('declaracao')">Declaração</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /** Retorna o HTML completo da view de painel */
+  function render() {
+    const naocoletados = pedidosColetados.filter(p => !p.pesado).length;
+
+    return `
+      <div class="view-header">
+        <h2>Painel de controle</h2>
+        <p>Acompanhe o status de todas as coletas</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="label">Agendadas</div>
+          <div class="value">${pedidosAgendados.length}</div>
+          <div class="sub">esta semana</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Coletadas</div>
+          <div class="value">${pedidosColetados.length}</div>
+          <div class="sub">${naocoletados} não pesada${naocoletados !== 1 ? 's' : ''}</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Concluídas</div>
+          <div class="value">${pedidosConcluidos.length}</div>
+          <div class="sub">este mês</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="App.showTab('agendadas')">Agendadas</button>
+        <button class="tab"        onclick="App.showTab('coletadas')">Coletadas</button>
+        <button class="tab"        onclick="App.showTab('concluidas')">Concluídas</button>
+      </div>
+
+      <div class="tab-content active" id="tab-agendadas">
+        ${renderAgendados()}
+      </div>
+
+      <div class="tab-content" id="tab-coletadas">
+        ${renderColetados()}
+      </div>
+
+      <div class="tab-content" id="tab-concluidas">
+        ${renderConcluidos()}
+      </div>
+    `;
+  }
+
+  return { render };
+
+})();
