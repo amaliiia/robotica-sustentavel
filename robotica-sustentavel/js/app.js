@@ -20,18 +20,23 @@ const App = (() => {
 
     document.getElementById(`view-${id}`)?.classList.add('active');
     document.getElementById(`nav-${id}`)?.classList.add('active');
+
+    // ── ALTERAÇÃO: Se a view acessada for o painel, busca os dados reais no Firebase ──
+    if (id === 'painel') {
+      PainelView.carregarDadosERenderizar();
+    }
   }
 
   /**
    * Troca a aba ativa dentro de um grupo de tabs.
    * Espera que os elementos sigam a convenção:
-   *   - Tab: elemento que recebeu o click (event.target)
-   *   - Conteúdo: <div id="tab-{id}">
+   * - Tab: elemento que recebeu o click (event.target)
+   * - Conteúdo: <div id="tab-{id}">
    * @param {string} id - ID da aba (sem prefixo 'tab-')
    */
   function showTab(id) {
     const allContents = document.querySelectorAll('.tab-content');
-    const allTabs     = document.querySelectorAll('.tab');
+    const allTabs = document.querySelectorAll('.tab');
 
     allContents.forEach(t => t.classList.remove('active'));
     allTabs.forEach(t => t.classList.remove('active'));
@@ -48,9 +53,11 @@ const App = (() => {
   function init() {
     // Cada módulo de view expõe um método render() que retorna HTML
     const views = {
-      coleta:     ColetaView.render(),
-      painel:     PainelView.render(),
-      rotas:      RotasView.render(),
+      coleta: ColetaView.render(),
+      // Aqui o painel vai renderizar sua versão "vazia" inicialmente.
+      // Quando o usuário clicar na tela do painel, a função showView() acima atualizará os dados.
+      painel: PainelView.render(),
+      rotas: RotasView.render(),
       declaracao: DeclaracaoView.render(),
     };
 

@@ -1,87 +1,296 @@
 /* =============================================================
-   sidebar.css — Barra lateral de navegação
+   sidebar.css — Barra lateral de navegação (Redesign)
    ============================================================= */
 
+/* Mantém o container principal da aplicação funcionando */
 .app {
   display: flex;
   height: 100vh;
   overflow: hidden;
 }
 
+/* Variáveis exclusivas da nova sidebar */
+:root {
+  --g-dark: #1A4016;
+  --g-mid: #2D6A27;
+  --g-light: #3d8a34;
+  --amber: #E8B84B;
+  --amber-dim: rgba(232, 184, 75, 0.15);
+  --amber-glow: rgba(232, 184, 75, 0.08);
+  --white: #ffffff;
+  --white-dim: rgba(255, 255, 255, 0.06);
+  --white-mid: rgba(255, 255, 255, 0.12);
+  --white-text: rgba(255, 255, 255, 0.55);
+  --white-hover: rgba(255, 255, 255, 0.08);
+  --radius-nav: 10px;
+}
+
+.sidebar-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background: transparent;
+  height: 100%;
+}
+
 .sidebar {
-  width: 210px;
-  min-width: 210px;
-  background: var(--rs-green-dark);
+  width: 220px;
+  min-width: 220px;
+  background: var(--g-dark);
+  border-radius: 18px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-/* ── Logotipo ── */
-.sidebar-logo {
-  padding: 18px 16px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+/* ── Header ── */
+.s-header {
+  padding: 22px 18px 16px;
+  position: relative;
 }
 
-.sidebar-logo .brand {
-  font-size: 15px;
+.s-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 18px;
+  right: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1) 40%, rgba(232, 184, 75, 0.3) 60%, transparent);
+}
+
+.s-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.s-logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--amber-dim);
+  border: 1px solid rgba(232, 184, 75, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.s-logo-icon i {
+  font-size: 18px;
+  color: var(--amber);
+}
+
+.s-brand-text .brand {
+  font-size: 14px;
   font-weight: 500;
-  color: #fff;
+  color: var(--white);
   line-height: 1.2;
 }
 
-.sidebar-logo .brand span { color: var(--rs-amber); }
-
-.sidebar-logo .sub {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-top: 2px;
+.s-brand-text .brand em {
+  font-style: normal;
+  color: var(--amber);
 }
 
-/* ── Navegação ── */
-.nav {
+.s-brand-text .sub {
+  font-size: 10px;
+  color: var(--white-text);
+  letter-spacing: 0.03em;
+  margin-top: 1px;
+}
+
+/* Status pill */
+.s-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--white-dim);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--white-text);
+}
+
+.s-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5dca7f;
+}
+
+/* ── Nav ── */
+.s-nav {
   flex: 1;
-  padding: 10px 8px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   overflow-y: auto;
 }
 
-.nav-section {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
+.s-section-label {
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 12px 10px 4px;
+  color: rgba(255, 255, 255, 0.25);
   font-weight: 500;
+  padding: 10px 8px 4px;
 }
 
+.s-section-label:first-child {
+  padding-top: 0;
+}
+
+/* Nav item */
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 9px 10px;
-  border-radius: var(--rs-radius);
+  gap: 10px;
+  padding: 10px 10px;
+  border-radius: var(--radius-nav);
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 13px;
-  font-weight: 400;
-  transition: background 0.15s, color 0.15s;
-  margin-bottom: 2px;
   border: none;
   background: none;
   width: 100%;
   text-align: left;
+  transition: background 0.15s;
+  position: relative;
+  color: var(--white-text);
+  font-size: 13px;
+  font-family: inherit;
 }
 
-.nav-item i { font-size: 17px; }
-
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--white-hover);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .nav-item.active {
-  background: var(--rs-amber);
-  color: var(--rs-green-dark);
+  background: var(--amber-dim);
+  border: 1px solid rgba(232, 184, 75, 0.2);
+  color: var(--amber);
+}
+
+.nav-item.active .nav-icon {
+  background: rgba(232, 184, 75, 0.2);
+  color: var(--amber);
+}
+
+.nav-item.active .nav-label {
   font-weight: 500;
 }
 
-.nav-item.active i { color: var(--rs-green-dark); }
+/* Icon container */
+.nav-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--white-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.nav-item:hover .nav-icon {
+  background: var(--white-mid);
+}
+
+.nav-icon i {
+  font-size: 16px;
+}
+
+.nav-label {
+  flex: 1;
+  font-size: 13px;
+}
+
+/* Badge / tag on nav item */
+.nav-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: var(--white-dim);
+  color: var(--white-text);
+}
+
+.nav-item.active .nav-badge {
+  background: rgba(232, 184, 75, 0.2);
+  color: var(--amber);
+}
+
+/* ── Footer ── */
+.s-footer {
+  padding: 12px;
+  position: relative;
+}
+
+.s-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.s-user {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: var(--radius-nav);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.s-user:hover {
+  background: var(--white-hover);
+}
+
+.s-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--amber-dim);
+  border: 1px solid rgba(232, 184, 75, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--amber);
+  flex-shrink: 0;
+}
+
+.s-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.s-user-name {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.s-user-role {
+  font-size: 10px;
+  color: var(--white-text);
+}
+
+.s-user-icon {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.25);
+}

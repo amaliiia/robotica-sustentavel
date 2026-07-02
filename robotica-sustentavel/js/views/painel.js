@@ -6,29 +6,8 @@ const PainelView = (() => {
 
   /* ── Dados de exemplo ── */
 
-  const pedidosAgendados = [
-    {
-      icon: 'ti-building-store',
-      nome: 'InfoTech Soluções Ltda',
-      endereco: 'Av. Beira Mar, 3000 — Meireles, Fortaleza',
-      data: '28 jun, 09:00',
-      itens: 15,
-    },
-    {
-      icon: 'ti-user',
-      nome: 'Carlos Eduardo Martins',
-      endereco: 'Rua Nogueira Acioli, 120 — Aldeota, Fortaleza',
-      data: '29 jun, 14:30',
-      itens: 3,
-    },
-    {
-      icon: 'ti-building',
-      nome: 'Escola Est. Gov. Menezes Pimentel',
-      endereco: 'R. Padre Mororó, 38 — Centro, Fortaleza',
-      data: '30 jun, 10:00',
-      itens: 28,
-    },
-  ];
+  // Alteração 1: O array começa vazio para receber os dados reais do Firebase
+  let pedidosAgendados = [];
 
   const pedidosColetados = [
     {
@@ -77,6 +56,11 @@ const PainelView = (() => {
   /* ── Funções de renderização de HTML ── */
 
   function renderAgendados() {
+    // Se não houver nenhum agendamento no banco, mostra um aviso amigável
+    if (pedidosAgendados.length === 0) {
+      return `<p style="padding: 20px; text-align: center; color: var(--rs-muted);">Nenhuma coleta agendada encontrada no momento.</p>`;
+    }
+
     return pedidosAgendados.map(p => `
       <div class="order-card">
         <div class="order-icon"><i class="ti ${p.icon}" aria-hidden="true"></i></div>
@@ -89,7 +73,7 @@ const PainelView = (() => {
             <span class="badge badge-amber">
               <i class="ti ti-clock" aria-hidden="true"></i> ${p.data}
             </span>
-            <span class="badge badge-gray">${p.itens} itens</span>
+            <span class="badge badge-gray">${p.itens}</span>
           </div>
         </div>
         <div class="order-actions">
@@ -117,20 +101,20 @@ const PainelView = (() => {
               <i class="ti ti-check" aria-hidden="true"></i> Coletado
             </span>
             ${p.pesado
-              ? `<span class="badge badge-green">
+        ? `<span class="badge badge-green">
                    <i class="ti ti-scale" aria-hidden="true"></i> Pesado
                  </span>`
-              : `<span class="badge badge-unweighed">
+        : `<span class="badge badge-unweighed">
                    <i class="ti ti-scale-off" aria-hidden="true"></i> Não pesado
                  </span>`
-            }
+      }
           </div>
         </div>
         <div class="order-actions">
           ${!p.pesado
-            ? `<button class="action-btn">Registrar peso</button>`
-            : `<button class="action-btn">Concluir</button>`
-          }
+        ? `<button class="action-btn">Registrar peso</button>`
+        : `<button class="action-btn">Concluir</button>`
+      }
           <button class="action-btn">Ver detalhes</button>
         </div>
       </div>
@@ -210,6 +194,53 @@ const PainelView = (() => {
     `;
   }
 
-  return { render };
+  // ── Alteração 2: Nova função inserida bem aqui, logo após a função render() terminar ──
+  function carregarDadosERenderizar() {
+    const container = document.getElementById('view-painel');
+    if (!container) return;
+    
+    // Coloca uma mensagem temporária na tela enquanto espera o Firebase responder
+    container.innerHTML = '<p style="padding: 20px; text-align: center;">Carregando dados reais do Firebase...</p>';
+
+    // Busca os dados na coleção "coletas" do banco
+    firebase.firestore().collection("coletas").where("status", "==", "agendada").get()
+      .then((querySnapshot) => {
+        pedidosAgendados = []; // Limpa a lista local antes de preencher
+        
+        querySnapshot.forEach((doc) => {
+          const dados = doc.data();
+          
+          // Trata a data gerada automaticamente pelo Firebase
+          let dataFormatada = 'Data a definir';
+          if (dados.dataCriacao && typeof dados.dataCriacao.toDate === 'function') {
+            const dataObj = dados.dataCriacao.toDate();
+            dataFormatada = dataObj.toLocaleDateString('pt-BR') + ' às ' + dataObj.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+          }
+
+          // Adiciona o pedido real estruturado para o card de exibição
+          pedidosAgendados.push({
+            id: '#' + doc.id.substring(0, 5).toUpperCase(), // Reduz o ID grande do Firebase
+            icon: 'ti-building-store', 
+            nome: dados.nome || 'Sem Nome',
+            endereco: dados.endereco || 'Sem Endereço',
+            data: dataFormatada, 
+            itens: dados.observacoes || 'Sem detalhes informados'
+          });
+        });
+        
+        // Com o array cheio de dados reais, renderiza a tela final
+        container.innerHTML = render();
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar do Firebase: ", error);
+        container.innerHTML = '<p style="padding: 20px; color: red; text-align: center;">Erro ao carregar dados do servidor.</p>';
+      });
+  }
+
+  // ── Alteração 3: Exportação ajustada para expor tanto o render antigo quanto a nova função de carga ──
+  return { 
+    render, 
+    carregarDadosERenderizar 
+  };
 
 })();

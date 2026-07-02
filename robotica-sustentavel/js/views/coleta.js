@@ -89,7 +89,7 @@ const ColetaView = (() => {
 
   /** Limpa todos os campos do formulário */
   function limpar() {
-    ['c-nome','c-doc','c-email','c-tel','c-endereco','c-obs'].forEach(id => {
+    ['c-nome', 'c-doc', 'c-email', 'c-tel', 'c-endereco', 'c-obs'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = '';
     });
@@ -97,20 +97,50 @@ const ColetaView = (() => {
     if (preview) preview.innerHTML = '';
   }
 
-  /** Valida e envia o agendamento */
+  /** Valida e envia o agendamento para o Firebase */
   function agendar() {
-    const nome     = document.getElementById('c-nome')?.value.trim();
-    const email    = document.getElementById('c-email')?.value.trim();
+    const nome = document.getElementById('c-nome')?.value.trim();
+    const docIdent = document.getElementById('c-doc')?.value.trim(); // Ajustado para pegar o CPF/CNPJ
+    const email = document.getElementById('c-email')?.value.trim();
+    const tel = document.getElementById('c-tel')?.value.trim();
     const endereco = document.getElementById('c-endereco')?.value.trim();
+    const obs = document.getElementById('c-obs')?.value.trim();
 
     if (!nome || !email || !endereco) {
       alert('Preencha pelo menos nome, e-mail e endereço para agendar.');
       return;
     }
 
-    // TODO: integrar com backend / API de agendamento
-    alert(`Coleta agendada com sucesso para:\n${nome}\n${endereco}`);
-    limpar();
+    // Muda o texto do botão para dar feedback ao usuário
+    const btn = event.target;
+    const textoOriginal = btn.innerHTML;
+    btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> Agendando...';
+    btn.disabled = true;
+
+    // Salva no Firestore na coleção "coletas"
+    firebase.firestore().collection("coletas").add({
+      nome: nome,
+      documento: docIdent,
+      email: email,
+      telefone: tel,
+      endereco: endereco,
+      observacoes: obs,
+      status: "agendada", // Adicionamos um status inicial
+      dataCriacao: firebase.firestore.FieldValue.serverTimestamp() // Data atual do servidor
+    })
+      .then((docRef) => {
+        alert(`Coleta agendada com sucesso!\nID: ${docRef.id}`);
+        limpar();
+      })
+      .catch((error) => {
+        console.error("Erro ao agendar: ", error);
+        alert("Ocorreu um erro ao agendar. Tente novamente.");
+      })
+      .finally(() => {
+        // Restaura o botão
+        btn.innerHTML = textoOriginal;
+        btn.disabled = false;
+      });
   }
 
   return { render, triggerUpload, previewPhoto, limpar, agendar };
