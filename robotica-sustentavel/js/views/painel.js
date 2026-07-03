@@ -396,6 +396,40 @@ const PainelView = (() => {
       btn.addEventListener('click', handler);
     });
 
+    // concluir: atualiza status no Firestore (se houver docId) e move para 'concluidos'
+    document.querySelectorAll('.btn-concluir').forEach(btn => {
+      btn.removeEventListener('click', btn._handler);
+      btn._handler = async (e) => {
+        const type = btn.dataset.type;
+        const idx = Number(btn.dataset.idx);
+        const arr = getArrayByType(type);
+        const item = arr[idx];
+        if (!item) return;
+
+        // Atualiza no Firestore quando disponível
+        if (item.docId) {
+          try {
+            await firebase.firestore().collection('coletas').doc(item.docId).update({
+              status: 'concluida',
+              dataConclusao: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          } catch (err) {
+            console.error('Erro ao marcar coleta como concluída:', err);
+          }
+        }
+
+        // Remove do array atual e adiciona em pedidosConcluidos
+        const removed = arr.splice(idx, 1)[0];
+        const concluded = Object.assign({}, removed, { status: 'concluida', dataConclusao: (new Date()).toLocaleDateString('pt-BR') });
+        pedidosConcluidos.unshift(concluded);
+
+        const container = document.getElementById('view-painel');
+        if (container) container.innerHTML = render();
+        attachModalHandlers();
+      };
+      btn.addEventListener('click', btn._handler);
+    });
+
     // fechar modais
     document.querySelectorAll('#modal-detalhes .modal-close, #modal-peso .modal-close').forEach(btn => {
       btn.removeEventListener('click', btn._handler);

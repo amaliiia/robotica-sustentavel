@@ -25,6 +25,10 @@ const App = (() => {
     if (id === 'painel') {
       PainelView.carregarDadosERenderizar();
     }
+    // quando abrir declaração, carrega as coletas concluídas para popular o seletor
+    if (id === 'declaracao') {
+      DeclaracaoView.carregarDadosERenderizar();
+    }
   }
 
   /**

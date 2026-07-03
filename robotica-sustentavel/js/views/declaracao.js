@@ -4,6 +4,9 @@
 
 const DeclaracaoView = (() => {
 
+  let coletasConcluidas = [];
+  let coletaSelecionada = null;
+
   const doc = {
     numero:          '2026/034',
     dataEmissao:     '20/06/2026',
@@ -52,6 +55,21 @@ const DeclaracaoView = (() => {
       <div class="view-header">
         <h2>Declaração de destinação</h2>
         <p>Documento para coletas concluídas</p>
+      </div>
+
+      <div class="decl-selector-card">
+        <div class="decl-selector-label">
+          <i class="ti ti-circle-check" aria-hidden="true"></i>
+          Coleta concluída
+        </div>
+        <div class="decl-selector-row">
+          <select id="decl-select" class="decl-select">
+            <option value="">Selecione uma coleta concluída...</option>
+            <option value="1">#2026/034 — Universidade de Fortaleza (UNIFOR) · 20/06/2026</option>
+            <option value="2">#2026/033 — Banco BNB — Agência Centro · 18/06/2026</option>
+            <option value="3">#2026/031 — Clínica Saúde Digital Ltda · 15/06/2026</option>
+          </select>
+        </div>
       </div>
 
       <div class="decl-container">
@@ -162,6 +180,105 @@ const DeclaracaoView = (() => {
     `;
   }
 
-  return { render };
+  /* ── Carregamento das coletas concluídas e comportamento do select ── */
+  function carregarDadosERenderizar() {
+    const container = document.getElementById('view-declaracao');
+    if (!container) return;
+
+    container.innerHTML = render();
+    // busca coletas com status 'concluida' e popula o select
+    firebase.firestore().collection('coletas').where('status', '==', 'concluida').get()
+      .then(qs => {
+        coletasConcluidas = [];
+        qs.forEach(s => {
+          const d = s.data();
+          coletasConcluidas.push({
+            docId: s.id,
+            nome: d.nome || (d.gerador && d.gerador.razaoSocial) || 'Sem nome',
+            endereco: d.endereco || (d.gerador && d.gerador.endereco) || '',
+            dataColeta: d.dataColeta ? (typeof d.dataColeta.toDate === 'function' ? d.dataColeta.toDate().toLocaleDateString('pt-BR') : d.dataColeta) : '',
+            gerador: d.gerador || {},
+            residuos: d.residuos || [],
+            documento: d.documento || d.cnpj || ''
+          });
+        });
+        populateSelect();
+        attachSelectHandler();
+      })
+      .catch(err => {
+        console.error('Erro ao carregar coletas concluídas:', err);
+        populateSelect();
+        attachSelectHandler();
+      });
+  }
+
+  function populateSelect() {
+    const select = document.getElementById('decl-select');
+    if (!select) return;
+    // mantém opção placeholder e adiciona as coletas carregadas
+    select.innerHTML = '<option value="">Selecione uma coleta concluída...</option>';
+    coletasConcluidas.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.docId;
+      opt.textContent = `${c.nome} · ${c.dataColeta || ''}`.trim();
+      select.appendChild(opt);
+    });
+  }
+
+  function attachSelectHandler() {
+    const select = document.getElementById('decl-select');
+    if (!select) return;
+    select.removeEventListener('change', select._handler);
+    select._handler = (e) => {
+      const id = e.target.value;
+      if (!id) {
+        // sem seleção: mantém o documento padrão
+        renderContainer();
+        return;
+      }
+      // tenta encontrar nos já carregados
+      const found = coletasConcluidas.find(c => c.docId === id);
+      if (found) {
+        // popula doc a partir do registro encontrado
+        doc.dataColeta = found.dataColeta || doc.dataColeta;
+        doc.condutor = found.condutor || doc.condutor;
+        doc.gerador = Object.keys(found.gerador || {}).length ? found.gerador : {
+          razaoSocial: found.nome,
+          cnpj: found.documento || '',
+          endereco: found.endereco || '',
+          responsavel: found.nome,
+          email: found.email || '',
+          telefone: found.telefone || ''
+        };
+        doc.residuos = found.residuos || [];
+        renderContainer();
+        return;
+      }
+
+      // fallback: busca documento completo no Firestore
+      firebase.firestore().collection('coletas').doc(id).get()
+        .then(snap => {
+          if (!snap.exists) return;
+          const d = snap.data();
+          doc.dataColeta = d.dataColeta ? (typeof d.dataColeta.toDate === 'function' ? d.dataColeta.toDate().toLocaleDateString('pt-BR') : d.dataColeta) : doc.dataColeta;
+          doc.condutor = d.condutor || doc.condutor;
+          doc.gerador = d.gerador || doc.gerador;
+          doc.residuos = d.residuos || [];
+          renderContainer();
+        })
+        .catch(err => console.error('Erro ao buscar coleta:', err));
+    };
+    select.addEventListener('change', select._handler);
+  }
+
+  function renderContainer() {
+    const container = document.getElementById('view-declaracao');
+    if (!container) return;
+    container.innerHTML = render();
+    populateSelect();
+    attachSelectHandler();
+  }
+
+  return { render, carregarDadosERenderizar };
 
 })();
