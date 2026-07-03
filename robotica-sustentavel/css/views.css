@@ -32,3 +32,105 @@
   color: var(--rs-muted);
   margin-top: 2px;
 }
+
+/* =============================================================
+   Modal — estilos para os modais de detalhes e registro de peso
+   (migrado de exemplo de componentes locais)
+   ============================================================= */
+
+.modal-wrap{
+  background:rgba(20,40,18,0.55);
+  border-radius:16px;
+  padding:32px 24px;
+  display:flex;align-items:center;justify-content:center;
+  min-height:520px;
+  position:fixed;inset:0;z-index:1000;
+}
+
+.modal{
+  background:#fff;
+  border-radius:12px;
+  border:1px solid var(--rs-border);
+  width:100%;
+  max-width:520px;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,0.12);
+}
+
+.modal-header{
+  background:var(--rs-green-dark);
+  padding:16px 20px;
+  display:flex;align-items:center;gap:12px;
+}
+.modal-header-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(232,184,75,0.13);border:1px solid rgba(232,184,75,0.25);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.modal-header-icon i{font-size:18px;color:var(--rs-amber)}
+.modal-header-info .title{font-size:14px;font-weight:500;color:#fff}
+.modal-header-info .sub{font-size:11px;color:rgba(255,255,255,0.82);margin-top:1px}
+.modal-close{
+  width:28px;height:28px;border-radius:8px;
+  background:rgba(255,255,255,0.08);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,0.55);transition:background .15s
+}
+.modal-close:hover{background:rgba(255,255,255,0.15);color:#fff}
+.modal-close i{font-size:16px}
+
+.modal-body{padding:20px}
+
+.status-row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--rs-sage);border:1px solid var(--rs-border);
+  border-radius:10px;padding:10px 14px;margin-bottom:16px;
+}
+.status-row i{font-size:18px;color:var(--rs-green)}
+.status-row .s-label{font-size:11px;color:var(--rs-muted);font-weight:500;text-transform:uppercase;letter-spacing:.07em}
+.status-row .s-val{font-size:13px;color:var(--rs-text);font-weight:500;margin-top:1px}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.info-item{display:flex;flex-direction:column;gap:3px}
+.info-item.full{grid-column:1/-1}
+.info-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--rs-muted);font-weight:500}
+.info-value{font-size:13px;color:var(--rs-text);font-weight:400}
+.info-value.addr{font-size:12px;color:var(--rs-muted)}
+
+.residuos-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--rs-muted);font-weight:500;margin-bottom:8px}
+.residuos-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.residuo-item{
+  display:flex;align-items:center;gap:10px;
+  background:var(--rs-sage);border:1px solid var(--rs-border);
+  border-radius:8px;padding:8px 12px;
+}
+.residuo-icon{width:28px;height:28px;border-radius:7px;background:#fff;border:1px solid var(--rs-border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.residuo-icon i{font-size:14px;color:var(--rs-green)}
+.residuo-info .rname{font-size:12px;font-weight:500;color:var(--rs-text)}
+.residuo-info .rqtd{font-size:11px;color:var(--rs-muted);margin-top:1px}
+.residuo-badge{font-size:11px;font-weight:500;padding:3px 8px;border-radius:20px;background:rgba(232,184,75,0.13);color:#7a4f00;border:1px solid rgba(232,184,75,0.25);white-space:nowrap}
+
+.divider{height:1px;background:var(--rs-border);margin:14px 0}
+
+.modal-footer{padding:14px 20px;border-top:1px solid var(--rs-border);display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--rs-sage)}
+.footer-meta{font-size:11px;color:var(--rs-muted)}
+.footer-btns{display:flex;gap:8px}
+
+.peso-visual{display:flex;flex-direction:column;align-items:center;background:var(--rs-sage);border:1px solid var(--rs-border);border-radius:12px;padding:20px 16px;margin-bottom:16px;text-align:center}
+.peso-visual i.scale-icon{font-size:38px;color:var(--rs-green);margin-bottom:8px;display:block}
+.peso-visual .hint{font-size:12px;color:var(--rs-muted);margin-bottom:14px}
+
+.peso-input-row{display:flex;align-items:center;gap:8px;justify-content:center}
+.peso-input{border:2px solid var(--rs-green);border-radius:10px;padding:10px 14px;font-size:22px;font-weight:500;color:var(--rs-green-dark);text-align:center;width:140px;background:#fff}
+.peso-input:focus{border-color:var(--rs-amber)}
+.peso-unit{font-size:16px;font-weight:500;color:var(--rs-muted)}
+
+.itens-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.itens-card{background:var(--rs-sage);border:1px solid var(--rs-border);border-radius:10px;padding:10px 14px}
+.itens-card .ic-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--rs-muted);font-weight:500}
+.itens-card .ic-val{font-size:18px;font-weight:500;color:var(--rs-green-dark);margin-top:3px}
+.itens-card .ic-sub{font-size:11px;color:var(--rs-muted);margin-top:2px}
+
+.obs-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--rs-muted);font-weight:500;margin-bottom:6px}
+.obs-field{border:1px solid var(--rs-border);border-radius:8px;padding:9px 11px;font-size:12px;color:var(--rs-muted);background:#fff;width:100%;resize:none;height:52px}
+.obs-field:focus{border-color:var(--rs-green)}

@@ -21,7 +21,7 @@ const App = (() => {
     document.getElementById(`view-${id}`)?.classList.add('active');
     document.getElementById(`nav-${id}`)?.classList.add('active');
 
-    // ── ALTERAÇÃO: Se a view acessada for o painel, busca os dados reais no Firebase ──
+    // ── ALTERAÇÃO: Se a view acessada for o painel, atualiza os dados do Firebase ──
     if (id === 'painel') {
       PainelView.carregarDadosERenderizar();
     }

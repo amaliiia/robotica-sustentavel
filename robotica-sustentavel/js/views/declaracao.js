@@ -4,14 +4,11 @@
 
 const DeclaracaoView = (() => {
 
-  /* ── Dados do documento de exemplo ── */
-
   const doc = {
     numero:          '2026/034',
     dataEmissao:     '20/06/2026',
     dataColeta:      '20/06/2026',
     condutor:        'Marcos Andrade',
-    veiculo:         'VW Delivery — ABC-1234',
 
     gerador: {
       razaoSocial:  'Universidade de Fortaleza — UNIFOR',
@@ -139,24 +136,16 @@ const DeclaracaoView = (() => {
 
             <p style="margin-bottom:14px; font-size:12px">
               Data da coleta: <strong>${doc.dataColeta}</strong> ·
-              Condutor responsável: <strong>${doc.condutor}</strong> ·
-              Veículo: <strong>${doc.veiculo}</strong>
+              Condutor responsável: <strong>${doc.condutor}</strong>
             </p>
 
-            <!-- Assinaturas -->
+            <!-- Assinatura -->
             <div class="decl-sig">
               <div class="sig-box">
                 <div class="sig-line"></div>
                 <div class="sig-name">
                   ${g.responsavel}<br>
                   <span>Representante do gerador</span>
-                </div>
-              </div>
-              <div class="sig-box">
-                <div class="sig-line"></div>
-                <div class="sig-name">
-                  ${doc.condutor}<br>
-                  <span>Resp. pela coleta — Robótica Sustentável</span>
                 </div>
               </div>
             </div>
